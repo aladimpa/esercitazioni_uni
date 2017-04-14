@@ -196,7 +196,7 @@ class Ordine
             const char* getCognome() const;
             const char* getIndirizzo() const;
             const char* getCF() const;
-            const RigaOrdine** getRigheordine() const;
+            RigaOrdine** getRigheordine() const;
             int getN() const;
             void setIdo(int ido);
             void setNome(char nome[]);
@@ -206,7 +206,7 @@ class Ordine
             void setRigheordine(RigaOrdine* righeordine[]);
             void setN(int n);
             void inserisci();
-            RigaOrdine* datoido(int ido);
+            RigaOrdine* datoindice(int indice);
             RigaOrdine* datoid(int id);
             double calcola();
             void stampa();
@@ -252,7 +252,7 @@ Ordine::Ordine(int ido, char nome[], char cognome[], char indirizzo[], char cf[]
     _righeordine = new RigaOrdine*[n];
     for (int i=0; i<n; i++)
     {
-        _righeordine[i] = &righeordine[i];
+        _righeordine[i] = rgo[i];
     }
     _n = n;
 }
@@ -294,7 +294,7 @@ Ordine::Ordine(const Ordine & ord)
     _righeordine = new RigaOrdine*[ord._n];
     for (int i=0; i<ord._n; i++)
     {
-        _righeordine[i] = &ord._righeordine[i];
+        _righeordine[i] = ord._righeordine[i];
     }
     _n = ord._n;
 }
@@ -344,7 +344,7 @@ const char* Ordine::getCF() const
     return _cf;
 }
 
-const RigaOrdine** Ordine::getRigheordine() const
+ RigaOrdine** Ordine::getRigheordine() const
 {
     if (_n == 0)
     {
@@ -352,10 +352,7 @@ const RigaOrdine** Ordine::getRigheordine() const
     }
     else
     {
-        for (int i=0; i<_n: i++)
-        {
-            return _righeordine[i];
-        }
+        return _righeordine;
     }
 }
 
@@ -419,9 +416,9 @@ void Ordine::setCF(char cf[])
 
 void Ordine::setRigheordine(RigaOrdine* righeordine[])
 {
-    if (_n==0)
+    if (_n==0 )
     {
-        return NULL;
+        cout << "Il modificatore setRigheOrine non è stato chiamato correttamente" << endl;
     }
     else
     {
@@ -442,9 +439,9 @@ void Ordine::inserisci()
     bool ok = false;
     for (int i=0; i<_n; i++)
     {
-        if (_righeoridne[i]!=NULL)
+        if (_righeordine[i]!=NULL)
         {
-            *_righeordine[i].inserisci_rigaOrdine();
+            _righeordine[i]->inserisci_rigaOrdine();
             ok = true;
         }
     }
@@ -461,26 +458,57 @@ void Ordine::inserisci()
             _righeordine[x] = _righeordinevecchio[x];
         }
         delete[] _righeordinevecchio;
-        *_righeordine[_n+1].inserisci_rigaOrdine();
+        _righeordine[_n+1]->inserisci_rigaOrdine();
         _n= _n+_n;
     }
 }
 
-RigaOrdine* Ordine::datoido(int ido)
+RigaOrdine* Ordine::datoindice(int indice)
 {
+    if(_righeordine[indice] == NULL)
+    {
+        return NULL;
+    }
+    else 
+    {
+        return _righeordine[indice];
+    }
 
 }
 
 RigaOrdine* Ordine::datoid(int id)
 {
-    
+    for (int i=0; i < _n; i++)
+    {
+        if(_righeordine[i]->getId() == id)
+        {
+            return _righeordine[i];
+        }
+    }
+    return NULL;
+}
+
+double Ordine::calcola()
+{
+    double somma = 0.0;
+    for (int i=0; i < _n; i++)
+    {
+        somma += _righeordine[i]->calcola();
+    }
+    return somma;
+}
+void Ordine::stampa()
+{
+    cout << "Ordine " << _ido 
+        << " di " << _nome << " " << _cognome
+        << " " << _cf << endl << _indirizzo << endl;
+    for (int i=0; i < _n; i++)
+    {
+        _righeordine[i]->stampa();
+    }
 }
 
 int main()
 {
-    RigaOrdine x;
-    x.stampa();
-    x.inserisci_rigaOrdine();
-    x.stampa();
     return 0;
 }
