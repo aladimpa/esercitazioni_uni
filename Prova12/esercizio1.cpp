@@ -246,7 +246,7 @@ void Data::copia_data(Data& data)
 Data Data::calcolo_data_prec()
 {
     Data d;
-    d.inserisci_data();
+    d.copia_data(*this);
     cout << "Giorno precedente: " << endl;
     if (d._mese == 1)
     {
