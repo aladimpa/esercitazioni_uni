@@ -245,62 +245,67 @@ void Data::copia_data(Data& data)
 
 Data Data::calcolo_data_prec()
 {
-    Data d;
-    d.copia_data(*this);
+    Data data;
+    data.copia_data(*this);
     cout << "Giorno precedente: " << endl;
-    if (d._mese == 1)
+    if (data._giorno == 1)
     {
-        if (d._giorno==1)
+        if (data._mese == 1)
         {
-            _anno = d._anno -1;
+            _anno = data._anno -1;
             _mese = 12;
-            _giorno = max(d._mese, d._anno);
+            _giorno = max(data._mese, data._anno);   
         }
         else
         {
-            _giorno = d._giorno - 1;
-            _mese = d._mese;
-            _anno = d._anno;
+            _giorno = data._giorno - 1;
+            _mese = data._mese;
+            _anno = data._anno;
         }
     }
     else
     {
-        _giorno = d._giorno - 1;
-        _mese = d._mese;
-        _anno = d._anno;
+        _giorno = data._giorno - 1;
+        _mese = data._mese;
+        _anno = data._anno;
     }
+    return data;
 }
 
 Data Data::calcolo_data_succ()
 {
-    Data d;
-    d.copia_data(*this);
+    Data data;
+    data.copia_data(*this);
     cout << "Giorno successivo: " << endl;
-    if (d._mese == 12)
+    if (data._giorno == max(_mese, _anno))
     {
-        if (d._giorno==31)
+        if (data._mese == 12)
         {
-            _anno = d._anno +1;
+            _anno = data._anno +1;
             _mese = 1;
-            _giorno = 1;
+            _giorno = 1;   
         }
         else
         {
-            _giorno = d._giorno + 1;
-            _mese = d._mese;
-            _anno = d._anno;
+            _giorno = 1;
+            _mese = data._mese + 1;
+            _anno = data._anno;
         }
     }
-    else if (_giorno=max(_mese, _anno))
+    else
     {
-        _giorno = 1;
-        _mese = d._mese + 1;
-        _anno = d._anno;
+        _giorno = data._giorno + 1;
+        _mese = data._mese;
+        _anno = data._anno;
     }
+    return data;
 }
 
 int main()
 {
+    Data x;
+    x.inserisci_data();
+    x.stampa_data();
     Data prec;
     prec.calcolo_data_prec();
     prec.stampa_data();
