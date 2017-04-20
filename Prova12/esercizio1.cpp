@@ -23,6 +23,7 @@ class Data
             int _giorno;
             int _mese;
             int _anno;
+            int max(int mese, int anno);
 };
 
 Data::Data()
