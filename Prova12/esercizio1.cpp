@@ -178,30 +178,134 @@ void Data::setA(int aa)
 
 void Data::inserisci_data()
 {
-
+    cout << "Inserimento data" << endl;
+    cout << "Inserisci l'anno: ";
+    do 
+    {
+        cin >> _anno;
+        if (_anno<1700)
+        {
+            cout << "Dato scorretto, inserire nuovamente l'anno" <<endl;
+        }
+    } while(_anno<1700);
+    cout << "Inserisci il mese: ";
+    do 
+    {
+        cin >> _mese;
+        if ((_mese<1)||(_mese>12))
+        {
+            cout << "Dato scorretto, inserire nuovamente il mese" <<endl;
+        }
+    } while((_mese<1)||(_mese>12));
+    cout << "Inserisci il giorno: ";
+    int giorno = max(_mese, _anno);
+    do 
+    {
+        cin >> _giorno;
+        if ((_giorno<1)||(_giorno>giorno))
+        {
+            cout << "Dato scorretto, inserire nuovamente il giorno" <<endl;
+        }
+    } while((_giorno<1)||(_giorno>giorno));
 }
 
 void Data::stampa_data()
 {
-
+    cout << _giorno << "/" << _mese << "/" << _anno << endl;
 }
 
 void Data::copia_data(Data& data)
 {
-
+    if ((data._mese>0)&&(data._mese<13))
+    {
+        _mese = data._mese;
+    }
+    else
+    {
+        _mese = 1;
+    }
+    if (data._anno>1699)
+    {
+        _anno = data._anno;
+    }
+    else
+    {
+        _anno = 1700;
+    }
+    int giorni = max(data._mese, data._anno);
+    if ((data._giorno>0)&&(data._giorno<=giorni))
+    {
+        _giorno = data._giorno;
+    }
+    else
+    {
+        _giorno = 1;
+    }
 }
 
 Data Data::calcolo_data_prec()
 {
-
+    Data d;
+    d.inserisci_data();
+    cout << "Giorno precedente: " << endl;
+    if (d._mese == 1)
+    {
+        if (d._giorno==1)
+        {
+            _anno = d._anno -1;
+            _mese = 12;
+            _giorno = max(d._mese, d._anno);
+        }
+        else
+        {
+            _giorno = d._giorno - 1;
+            _mese = d._mese;
+            _anno = d._anno;
+        }
+    }
+    else
+    {
+        _giorno = d._giorno - 1;
+        _mese = d._mese;
+        _anno = d._anno;
+    }
 }
 
 Data Data::calcolo_data_succ()
 {
-
+    Data d;
+    d.copia_data(*this);
+    cout << "Giorno successivo: " << endl;
+    if (d._mese == 12)
+    {
+        if (d._giorno==31)
+        {
+            _anno = d._anno +1;
+            _mese = 1;
+            _giorno = 1;
+        }
+        else
+        {
+            _giorno = d._giorno + 1;
+            _mese = d._mese;
+            _anno = d._anno;
+        }
+    }
+    else if (_giorno=max(_mese, _anno))
+    {
+        _giorno = 1;
+        _mese = d._mese + 1;
+        _anno = d._anno;
+    }
 }
 
 int main()
 {
+    Data prec;
+    prec.calcolo_data_prec();
+    prec.stampa_data();
+    Data succ;
+    succ.calcolo_data_succ();
+    succ.stampa_data();
     return 0;
 }
