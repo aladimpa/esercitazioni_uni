@@ -295,7 +295,7 @@ Data Data::calcolo_data_succ()
 
 int main()
 {
-    Data x;
+    Data x; //=Data();
     x.inserisci_data();
     cout << "Data corrente: " << endl;
     x.stampa_data();
@@ -305,7 +305,7 @@ int main()
     prec.stampa_data();
     Data succ;
     succ = Data(x.calcolo_data_succ());
-    cout << "Data successiva:" << endl;
+    cout << "Data successiva:";
     succ.stampa_data();
     return 0;
 }
