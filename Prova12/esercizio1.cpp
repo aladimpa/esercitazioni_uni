@@ -247,27 +247,23 @@ Data Data::calcolo_data_prec()
 {
     Data data;
     data.copia_data(*this);
-    cout << "Giorno precedente: " << endl;
     if (data._giorno == 1)
     {
         if (data._mese == 1)
         {
-            _anno = data._anno -1;
-            _mese = 12;
-            _giorno = max(data._mese, data._anno);   
+            data._anno = _anno -1;
+            data._mese = 12;
+            data._giorno = 31;   
         }
         else
         {
-            _giorno = data._giorno - 1;
-            _mese = data._mese;
-            _anno = data._anno;
+            data._mese = _mese -1 ;
+            data._giorno = max(_mese, _anno);
         }
     }
     else
     {
-        _giorno = data._giorno - 1;
-        _mese = data._mese;
-        _anno = data._anno;
+        data._giorno = _giorno - 1;
     }
     return data;
 }
@@ -276,27 +272,23 @@ Data Data::calcolo_data_succ()
 {
     Data data;
     data.copia_data(*this);
-    cout << "Giorno successivo: " << endl;
     if (data._giorno == max(_mese, _anno))
     {
         if (data._mese == 12)
         {
-            _anno = data._anno +1;
-            _mese = 1;
-            _giorno = 1;   
+            data._anno = _anno +1;
+            data._mese = 1;
+            data._giorno = 1;   
         }
         else
         {
-            _giorno = 1;
-            _mese = data._mese + 1;
-            _anno = data._anno;
+            data._giorno = 1;
+            data._mese = _mese + 1;
         }
     }
     else
     {
-        _giorno = data._giorno + 1;
-        _mese = data._mese;
-        _anno = data._anno;
+        data._giorno = _giorno + 1;
     }
     return data;
 }
@@ -305,12 +297,15 @@ int main()
 {
     Data x;
     x.inserisci_data();
+    cout << "Data corrente: " << endl;
     x.stampa_data();
     Data prec;
-    prec.calcolo_data_prec();
+    prec = Data(x.calcolo_data_prec());
+    cout << "Data precedente:" << endl;
     prec.stampa_data();
     Data succ;
-    succ.calcolo_data_succ();
+    succ = Data(x.calcolo_data_succ());
+    cout << "Data successiva:" << endl;
     succ.stampa_data();
     return 0;
 }
