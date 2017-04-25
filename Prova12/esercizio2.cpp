@@ -17,6 +17,7 @@ class Data
             void setA(int aa);
             void inserisci_data();
             void stampa_data();
+            void copia_data(Data& data);
     private:
             int _giorno;
             int _mese;
@@ -210,6 +211,35 @@ void Data::inserisci_data()
 void Data::stampa_data()
 {
     cout << _giorno << "/" << _mese << "/" << _anno << endl;
+}
+
+void Data::copia_data(Data& data)
+{
+    if ((data._mese>0)&&(data._mese<13))
+    {
+        _mese = data._mese;
+    }
+    else
+    {
+        _mese = 1;
+    }
+    if (data._anno>1699)
+    {
+        _anno = data._anno;
+    }
+    else
+    {
+        _anno = 1700;
+    }
+    int giorni = max(data._mese, data._anno);
+    if ((data._giorno>0)&&(data._giorno<=giorni))
+    {
+        _giorno = data._giorno;
+    }
+    else
+    {
+        _giorno = 1;
+    }
 }
 
 class Partita
@@ -413,6 +443,7 @@ void Partita::setNammoniti(int ammoniti)
 void Partita::inserisci_partita()
 {
     cout << "Inserimento partita" << endl;
+    _data.inserisci_data();
     char nome1[32];
     cout << "Squadra 1: ";
     cin >> nome1;
@@ -467,9 +498,62 @@ void Partita::inserisci_partita()
 
 void Partita::stampa_partita()
 {
-
+    cout << "Partita: " << endl;
+    cout << _squadra[0] << " vs " << _squadra[1] << " ";
+    _data.stampa_data();
+    cout << _ngoal[0] << "-" << _ngoal[1] << endl;
+    cout << "Ammoniti: " << _nammoniti << endl;
+    cout << "Espulsi: " << _nespulsi << endl;
 }
 void Partita::copia_partita(Partita& partita)
 {
+    delete[] _squadra[0];
+    delete[] _squadra[1];
+    _data.copia_data(partita._data);
+    int dim1 = strlen(partita._squadra[0]);
+    _squadra[0] = new char[dim1+1];
+    strcpy(_squadra[0], partita._squadra[0]);
+    int dim2 = strlen(partita._squadra[1]);
+    _squadra[1] = new char[dim2+1];
+    strcpy(_squadra[1], partita._squadra[1]);
+    if (partita._ngoal[0] < 0)
+    {
+        _ngoal[0] = 0;
+    }
+    else
+    {
+        _ngoal[0] = partita._ngoal[0];
+    }
+    if (partita._ngoal[1] < 0)
+    {
+        _ngoal[1] = 0;
+    }
+    else
+    {
+        _ngoal[1] = partita._ngoal[1];
+    }
+    if ( partita._nespulsi< 0)
+    {
+        _nespulsi = 0;
+    }
+    else
+    {
+        _nespulsi = partita._nespulsi;
+    }
+    if (partita._nammoniti < 0)
+    {
+        _nammoniti = 0;
+    }
+    else
+    {
+        _nammoniti = partita._nammoniti;
+    }
+}
 
+int main()
+{
+    Partita p;
+    p.inserisci_partita();
+    p.stampa_partita();
+    return 0;
 }
