@@ -328,8 +328,14 @@ Partita::Partita(Data data, char squadra1[], char squadra2[], int ngoal1, int ng
 
 Partita::Partita(const Partita& p)
 {
-    delete[] _squadra[0];
-    delete[] _squadra[1];
+    if (_squadra[0] != NULL)
+    {
+        delete[] _squadra[0];
+    }
+    if (_squadra[1] != NULL)
+    {
+        delete[] _squadra[1];
+    }
     _data = Data(p._data);
     int dim1 = strlen(p._squadra[0]);
     _squadra[0] = new char[dim1+1];
@@ -373,8 +379,14 @@ Partita::Partita(const Partita& p)
 
 Partita::~Partita()
 {
-    delete[] _squadra[0];
-    delete[] _squadra[1];
+    if (_squadra[0] != NULL)
+    {
+        delete[] _squadra[0];
+    }
+    if (_squadra[1] != NULL)
+    {
+        delete[] _squadra[1];
+    }
 }
 
 Data Partita::getData() const
