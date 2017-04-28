@@ -373,8 +373,10 @@ Partita::Partita(const Partita& p)
 
 Partita::~Partita()
 {
-    delete[] _squadra[0];
-    delete[] _squadra[1];
+    if (_squadra[0] != NULL)
+        delete[] _squadra[0];
+    if (_squadra[1] != NULL)
+        delete[] _squadra[1];
 }
 
 Data Partita::getData() const
@@ -447,14 +449,16 @@ void Partita::inserisci_partita()
     char nome1[32];
     cout << "Squadra 1: ";
     cin >> nome1;
-    delete[] _squadra[0];
+    if (_squadra[0] != NULL)
+        delete[] _squadra[0];
     int dim1= strlen(nome1);
     _squadra[0] = new char[dim1+1];
     strcpy(_squadra[0], nome1);
     char nome2[32];
     cout << "Squadra 2: ";
     cin >> nome2;
-    delete[] _squadra[1];
+    if (_squadra[1] != NULL)
+        delete[] _squadra[1];
     int dim2= strlen(nome2);
     _squadra[1] = new char[dim2+1];
     strcpy(_squadra[1], nome2);
@@ -567,23 +571,20 @@ class ArchivioPartite
 
 ArchivioPartite::ArchivioPartite()
 {
-    _n = 100;
-    for (int i=0; i<_n; i++)
-    {
-        _archivio[i] = Partita();
-    }
+    _n = 0;
+    _archivio = new Partita[100];
 }
 
 ArchivioPartite::ArchivioPartite(const ArchivioPartite& ap)
 {
-    //io ho un archivio intero da copiare o solo un "elemento"?
+    if (_archivio != NULL)
+    {
+        delete[] _archivio;
+    }
     if ((ap._n>0)&&(ap._n<=101))
     {
         _n = ap._n;
-        if (_archivio != NULL)
-        {
-            delete[] _archivio;
-        }
+        _archivio = new Partita[100];
         for (int i=0; i<ap._n; i++)
         {
             _archivio[i] = Partita(ap._archivio[i]);
@@ -591,11 +592,8 @@ ArchivioPartite::ArchivioPartite(const ArchivioPartite& ap)
     }
     else
     {
-        _n = 100;
-        for (int i=0; i<_n; i++)
-        {
-            _archivio[i] = Partita();
-        }
+        _n = 0;
+        _archivio = new Partita[100];
     }
 }
 
@@ -609,32 +607,153 @@ ArchivioPartite::~ArchivioPartite()
 
 void ArchivioPartite::inserisci_partita()
 {
-    for (int i=0; i<_n; i++)
-    {
-        char nome[32] = _archivio[i].Partita(getSquadra(1));
-        {
-
-        }
-    }
+    _archivio[_n].inserisci_partita();
+    _n++;
 }
 
 int ArchivioPartite::n_partite_archivio()
 {
-
+    return _n;
 }
 
 Partita ArchivioPartite::partita_dato_indice(int n)
 {
-
+    if ((n > _n)&&(n < 0))
+    {
+        cout << "Non esiste la partita cercata" << endl;
+        return Partita();
+    }
+    else
+    {
+        return _archivio[n];
+    }
 }
 
 void ArchivioPartite::stampa_archivio()
 {
-
+    for (int i = 0; i< _n; i++)
+    {
+        _archivio[i].stampa_partita();
+    }
 }
 
 int main()
 {
-    
+    ArchivioPartite ap;
+    ap.partita_dato_indice(0).stampa_partita();
+    bool esci = false;
+    do
+    {
+        int scelta;
+        cout << "Inserisci il numero per la scelta:" << endl
+            << "1 - Inserimento partita;" << endl
+            << "2 - Mostra numero dei goal totali;" << endl
+            << "3 - Mostra numero massimo dei goal segnati in una singola partita;" << endl
+            << "4 - Mostra il numero medio degli espulsi per partita;" << endl
+            << "5 - Mostra il numero massimo degli ammoniti;" << endl
+            << "6 - Mostra partite giocate nel mese da te richiesto;" << endl
+            << endl << "7 - Esci" << endl
+            << endl << "Scelta: ";
+        cin >> scelta;
+        switch (scelta)
+        {
+            case 1: 
+            {
+                ap.inserisci_partita();
+                break;
+            }
+            case 2: 
+            {
+                int tot = 0;
+                for (int i=0; i < ap.n_partite_archivio(); i++ )
+                {
+                    tot = tot + ap.partita_dato_indice(i).getNgoal(1);
+                    tot = tot + ap.partita_dato_indice(i).getNgoal(2);
+                }
+                cout << "Goal totali: " << tot << endl;
+                break;
+            }
+            case 3: 
+            {
+                int max = 0;
+                for (int i=0; i < ap.n_partite_archivio(); i++ )
+                {
+                    int somma = ap.partita_dato_indice(i).getNgoal(1) + ap.partita_dato_indice(i).getNgoal(2);
+                    if (somma > max)
+                    {
+                        max = somma;
+                    }
+                }
+                cout << "Il massimo numero di goal effettuati in una partita é: " << max << endl;
+                break;
+            }
+            case 4: 
+            {
+                if (ap.n_partite_archivio() == 0)
+                {
+                    cout << "Non sono state giocate partite." << endl;
+                }
+                else
+                {
+                    int tot = 0;
+                    for (int i=0; i < ap.n_partite_archivio(); i++ )
+                    {
+                        tot = tot + ap.partita_dato_indice(i).getNespulsi();
+                    }
+                    cout << "Il numero medio degli espulsi é: " << tot/ap.n_partite_archivio() << endl;
+                }
+                break;
+            }
+            case 5: 
+            {
+                if (ap.n_partite_archivio() == 0)
+                {
+                    cout << "Non sono state giocate partite." << endl;
+                }
+                else
+                {
+                    int tot = 0;
+                    for (int i=0; i < ap.n_partite_archivio(); i++ )
+                    {
+                        tot = tot + ap.partita_dato_indice(i).getNammoniti();
+                    }
+                    cout << "Il numero medio degli ammoniti é: " << tot/ap.n_partite_archivio() << endl;
+                }
+                break;
+            }
+            case 6: 
+            {
+                int mese;
+                do
+                {
+                    cout << "Inserisci il mese in numero (1-12: ";
+                    cin >> mese;
+                    if ((mese>0)&&(mese<13))
+                    {
+                        int mesep;
+                        for (int i=0; i < ap.n_partite_archivio(); i++ )
+                        {
+                            mesep = ap.partita_dato_indice(i).getData().getM();
+                            if (mese == mesep)
+                            {
+                                ap.partita_dato_indice(i).stampa_partita();
+                            }
+                        }
+                    }
+                } while (!((mese>0)&&(mese<13)));
+                break;
+            }
+            case 7: 
+            {
+                esci = true;
+                break;
+            }
+            default: 
+            {
+                cout << "Scelta scorretta!" << endl;
+                break;
+            }
+        }
+    } while (!esci);
     return 0;
 }
